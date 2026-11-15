@@ -1,7 +1,7 @@
 // CSS imports
 import '../styles/styles.css';
 
-import App from './pages/app';
+import App from './pages/app.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const app = new App({
