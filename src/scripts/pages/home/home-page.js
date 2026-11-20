@@ -7,6 +7,7 @@ import compassIcon from '@/assets/icons/compass.svg?raw';
 import searchIcon from '@/assets/icons/search.svg?raw';
 import navigationIcon from '@/assets/icons/navigation.svg?raw';
 import chevronDownIcon from '@/assets/icons/chevron-down.svg?raw';
+import plusIcon from '@/assets/icons/plus.svg?raw';
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -69,15 +70,11 @@ export default class HomePage {
                 Jelajahi cerita menarik dari berbagai daerah dan visualisasikan persebarannya pada peta digital interaktif.
               </p>
             </div>
-            <div class="home-header-stats" aria-label="Statistik Cerita">
-              <div class="stat-badge">
-                <span class="stat-number" id="total-stories-count">0</span>
-                <span class="stat-label">Total Cerita</span>
-              </div>
-              <div class="stat-badge stat-badge-accent">
-                <span class="stat-number" id="mapped-stories-count">0</span>
-                <span class="stat-label">Di Peta</span>
-              </div>
+            <div class="home-header-actions" aria-label="Aksi Beranda">
+              <a href="#/add" class="btn btn-primary btn-sm btn-add-story-header" title="Tambah Cerita Baru">
+                ${plusIcon}
+                <span>Tambah Cerita</span>
+              </a>
             </div>
           </header>
 
@@ -486,13 +483,8 @@ export default class HomePage {
       .join('');
   }
 
-  updateCounts({ total, mapped, filteredTotal, filteredMapped }) {
-    const totalCountEl = document.querySelector('#total-stories-count');
-    const mappedCountEl = document.querySelector('#mapped-stories-count');
+  updateCounts({ filteredTotal, filteredMapped }) {
     const filteredBadgeEl = document.querySelector('#filtered-count');
-
-    if (totalCountEl) totalCountEl.textContent = total;
-    if (mappedCountEl) mappedCountEl.textContent = mapped;
 
     if (filteredBadgeEl) {
       filteredBadgeEl.textContent = `Menampilkan ${filteredTotal} cerita (${filteredMapped} pada peta)`;

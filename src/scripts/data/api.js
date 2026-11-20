@@ -149,3 +149,68 @@ export async function getData({ location = 1 } = {}) {
 
   return responseJson.listStory || responseJson.data || [];
 }
+
+export async function addStory({ description, photo, lat, lon }) {
+  if (!description || !description.trim()) {
+    throw new Error('Deskripsi cerita wajib diisi.');
+  }
+
+  if (!photo) {
+    throw new Error('Foto cerita wajib disertakan (pilih file atau ambil dari kamera).');
+  }
+
+  const formData = new FormData();
+  formData.append('description', description.trim());
+  formData.append('photo', photo);
+
+  if (lat !== undefined && lat !== null && lat !== '') {
+    formData.append('lat', String(lat));
+  }
+  if (lon !== undefined && lon !== null && lon !== '') {
+    formData.append('lon', String(lon));
+  }
+
+  const userToken = localStorage.getItem('AUTH_ACCESS_TOKEN');
+  let token = (userToken && userToken.startsWith('ey')) ? userToken : await getStoryApiToken();
+
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  let response;
+  try {
+    response = await fetch(ENDPOINTS.DATA, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+  } catch (netError) {
+    throw new Error(`Gagal menghubungi server API: ${netError.message || 'Koneksi terputus.'}`);
+  }
+
+  if (response.status === 401) {
+    try {
+      response = await fetch(`${CONFIG.BASE_URL}/stories/guest`, {
+        method: 'POST',
+        body: formData,
+      });
+    } catch {
+      // Biarkan respons awal diproses
+    }
+  }
+
+  let responseJson;
+  try {
+    responseJson = await response.json();
+  } catch {
+    throw new Error(`Server memberikan respons tidak valid (HTTP ${response.status}).`);
+  }
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || 'Gagal menambahkan cerita baru ke server.');
+  }
+
+  return responseJson;
+}
+

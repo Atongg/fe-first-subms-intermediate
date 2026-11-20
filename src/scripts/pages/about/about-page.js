@@ -13,6 +13,8 @@ export default class AboutPage {
             <li><strong>View:</strong> Merender antarmuka daftar cerita dan visualisasi peta interaktif menggunakan Leaflet & OpenStreetMap.</li>
             <li><strong>Presenter:</strong> Menjembatani Model dan View serta mengelola logika alur aplikasi dan sinkronisasi list dengan peta.</li>
             <li><strong>Interactive Map:</strong> Visualisasi marker lokasi, popup informatif, filter interaktif, serta sinkronisasi dua arah antara kartu dan peta.</li>
+            <li><strong>Tambah Cerita & Geotagging:</strong> Formulir tambah cerita interaktif dengan pemilihan latitude dan longitude melalui event klik di peta digital Leaflet.</li>
+            <li><strong>Kamera Langsung & Unggah Berkas:</strong> Mendukung input gambar melalui berkas lokal maupun tangkapan langsung dari kamera pengguna menggunakan MediaStream API dengan pemutusan resource kamera otomatis saat selesai digunakan.</li>
             <li><strong>Multiple Tile Layers:</strong> Mendukung layer control dengan pilihan tile layer bebas API key (OpenStreetMap Standar, HOT Humanitarian, OpenTopoMap, Esri Citra Satelit, dan CyclOSM).</li>
             <li><strong>Custom View Transition:</strong> Menerapkan transisi tampilan halus menggunakan View Transitions API.</li>
           </ul>

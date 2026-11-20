@@ -117,8 +117,6 @@ class HomePresenter {
     const mapped = this.#allStories.filter((s) => s.lat != null && s.lon != null).length;
 
     this.#view.updateCounts({
-      total,
-      mapped,
       filteredTotal: filteredCount !== null ? filteredCount : total,
       filteredMapped: filteredMappedCount !== null ? filteredMappedCount : mapped,
     });
