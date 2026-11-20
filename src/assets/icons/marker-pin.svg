@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 42" width="32" height="42" class="marker-pin-svg" aria-hidden="true">
+  <ellipse cx="16" cy="39" rx="7" ry="2.5" fill="rgba(0, 0, 0, 0.25)" />
+  <path d="M16 1C9.37 1 4 6.37 4 13c0 8.5 10.8 23.3 11.27 23.95a1 1 0 0 0 1.46 0C17.2 36.3 28 21.5 28 13c0-6.63-5.37-12-12-12z" fill="#dc2626" stroke="#ffffff" stroke-width="1.5" />
+  <circle cx="16" cy="13" r="4.5" fill="#ffffff" />
+</svg>

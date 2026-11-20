@@ -1,8 +1,8 @@
 import { getData } from './api.js';
 
 class HomeModel {
-  static async getItems() {
-    return await getData();
+  static async getItems(options = {}) {
+    return await getData(options);
   }
 }
 

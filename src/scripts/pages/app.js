@@ -1,11 +1,13 @@
 import routes from '../routes/routes.js';
 import { getActiveRoute } from '../routes/url-parser.js';
 import AuthModel from '../data/auth-model.js';
+import logoutIcon from '@/assets/icons/logout.svg?raw';
 
 class App {
   #content = null;
   #drawerButton = null;
   #navigationDrawer = null;
+  #currentPage = null;
 
   constructor({ navigationDrawer, drawerButton, content }) {
     this.#content = content;
@@ -82,11 +84,7 @@ class App {
         <li><a href="#/about" class="${activeRoute === '/about' ? 'active' : ''}">About</a></li>
         <li>
           <button id="logout-button" class="nav-logout-btn" type="button" title="Logout${userName}" aria-label="Logout">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
+            ${logoutIcon}
           </button>
         </li>
       `;
@@ -144,6 +142,14 @@ class App {
   }
 
   async #renderPageContent(page) {
+    if (this.#currentPage && typeof this.#currentPage.destroy === 'function') {
+      try {
+        this.#currentPage.destroy();
+      } catch (error) {
+        console.warn('Error during page destroy:', error);
+      }
+    }
+    this.#currentPage = page;
     this.#content.innerHTML = await page.render();
     if (typeof page.afterRender === 'function') {
       await page.afterRender();

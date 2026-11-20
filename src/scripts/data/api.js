@@ -1,37 +1,19 @@
 import CONFIG from '../config.js';
 
 const ENDPOINTS = {
-  REGISTER: `${CONFIG.BASE_URL}/register`,
-  LOGIN: `${CONFIG.BASE_URL}/login`,
   DATA: `${CONFIG.BASE_URL}/stories`,
+  LOGIN: `${CONFIG.BASE_URL}/login`,
 };
 
 const STORAGE_USERS_KEY = 'MOCK_REGISTERED_USERS';
+const STORY_API_TOKEN_KEY = 'STORY_API_GUEST_TOKEN';
+
+const DEFAULT_STORY_TOKEN =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLUtnaTNGcF90SFhFeDdWQ2kiLCJpYXQiOjE3OTUwNzMyMjV9.pwyfQi4ooNWchSwcCFf5SP7e0YEhxH4sAgNj0KCHzHg';
+
 
 export async function register({ name, email, password }) {
-  const isRealApi =
-    typeof CONFIG.BASE_URL === 'string' && CONFIG.BASE_URL.startsWith('http');
-
-  if (isRealApi) {
-    const response = await fetch(ENDPOINTS.REGISTER, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
-
-    const responseJson = await response.json();
-    if (!response.ok || responseJson.error) {
-      throw new Error(
-        responseJson.message || 'Pendaftaran gagal. Silakan coba lagi.'
-      );
-    }
-
-    return responseJson;
-  }
-
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 400));
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -72,37 +54,7 @@ export async function register({ name, email, password }) {
 }
 
 export async function login({ email, password }) {
-  const isRealApi =
-    typeof CONFIG.BASE_URL === 'string' && CONFIG.BASE_URL.startsWith('http');
-
-  if (isRealApi) {
-    const response = await fetch(ENDPOINTS.LOGIN, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const responseJson = await response.json();
-    if (!response.ok || responseJson.error) {
-      throw new Error(
-        responseJson.message || 'Login gagal. Periksa kembali email dan password.'
-      );
-    }
-
-    const token = responseJson.loginResult?.token || responseJson.token;
-    const user = responseJson.loginResult || responseJson.user || { email };
-
-    return {
-      error: false,
-      message: responseJson.message || 'Login berhasil!',
-      token,
-      user,
-    };
-  }
-
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 400));
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -147,26 +99,53 @@ export async function login({ email, password }) {
   };
 }
 
-export async function getData() {
-  const isRealApi =
-    typeof CONFIG.BASE_URL === 'string' && CONFIG.BASE_URL.startsWith('http');
-
-  if (isRealApi) {
-    const token = localStorage.getItem('AUTH_ACCESS_TOKEN');
-    const headers = {};
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    const response = await fetch(ENDPOINTS.DATA, { headers });
-    const responseJson = await response.json();
-
-    if (!response.ok || responseJson.error) {
-      throw new Error(responseJson.message || 'Gagal memuat data dari API.');
-    }
-
-    return responseJson.listStory || responseJson.data || [];
+async function getStoryApiToken() {
+  const cachedToken = localStorage.getItem(STORY_API_TOKEN_KEY);
+  if (cachedToken) {
+    return cachedToken;
   }
 
-  return [];
+  try {
+    const response = await fetch(ENDPOINTS.LOGIN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: 'dicoding_guest_app@gmail.com',
+        password: 'password123',
+      }),
+    });
+
+    const responseJson = await response.json();
+    const token = responseJson.loginResult?.token || responseJson.token;
+    if (token) {
+      localStorage.setItem(STORY_API_TOKEN_KEY, token);
+      return token;
+    }
+  } catch (err) {
+    console.warn('Gagal login guest ke Story API, menggunakan default token:', err.message);
+  }
+
+  return DEFAULT_STORY_TOKEN;
+}
+
+export async function getData({ location = 1 } = {}) {
+  const token = await getStoryApiToken();
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const url = new URL(ENDPOINTS.DATA);
+  if (location !== undefined) {
+    url.searchParams.set('location', String(location));
+  }
+
+  const response = await fetch(url.toString(), { headers });
+  const responseJson = await response.json();
+
+  if (!response.ok || responseJson.error) {
+    throw new Error(responseJson.message || 'Gagal memuat data dari API.');
+  }
+
+  return responseJson.listStory || responseJson.data || [];
 }

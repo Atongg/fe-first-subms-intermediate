@@ -9,9 +9,11 @@ export default class AboutPage {
             metode <strong>Hash Routing</strong> dan pola desain <strong>Model-View-Presenter (MVP)</strong>.
           </p>
           <ul style="color: var(--text-muted); line-height: 1.8; padding-left: 20px;">
-            <li><strong>Model:</strong> Mengelola data, API endpoints, serta state autentikasi (token & user).</li>
-            <li><strong>View:</strong> Merender tampilan antarmuka dan menangkap interaksi pengguna.</li>
-            <li><strong>Presenter:</strong> Menjembatani Model dan View serta mengelola logika alur aplikasi.</li>
+            <li><strong>Model:</strong> Mengelola data, API endpoints (Story API Dicoding), serta state autentikasi (token & user).</li>
+            <li><strong>View:</strong> Merender antarmuka daftar cerita dan visualisasi peta interaktif menggunakan Leaflet & OpenStreetMap.</li>
+            <li><strong>Presenter:</strong> Menjembatani Model dan View serta mengelola logika alur aplikasi dan sinkronisasi list dengan peta.</li>
+            <li><strong>Interactive Map:</strong> Visualisasi marker lokasi, popup informatif, filter interaktif, serta sinkronisasi dua arah antara kartu dan peta.</li>
+            <li><strong>Multiple Tile Layers:</strong> Mendukung layer control dengan pilihan tile layer bebas API key (OpenStreetMap Standar, HOT Humanitarian, OpenTopoMap, Esri Citra Satelit, dan CyclOSM).</li>
             <li><strong>Custom View Transition:</strong> Menerapkan transisi tampilan halus menggunakan View Transitions API.</li>
           </ul>
         </div>

@@ -1,4 +1,4 @@
-// CSS imports
+import 'leaflet/dist/leaflet.css';
 import '../styles/styles.css';
 
 import App from './pages/app.js';
